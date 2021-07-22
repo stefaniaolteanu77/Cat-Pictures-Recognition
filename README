@@ -1,0 +1,92 @@
+Olteanu Cristiana - Stefania 
+315 CD
+
+Task 1 Sparse Jacobi
+
+	Functia generate_probabilities_system se foloseste de pozitia elementelor 
+in triunghi. Varful triunghiului si colturile stanga si dreapta a caror 
+pozitie este calculata folosindu-ma de numarul de linii din triunghi, sunt
+cazuri separate deoarece vecinii lor au indici diferiti de restul elementelor.
+Pentru a putea popula matricea cu -1 m-am folosit de o generalizare a cum 
+arata indicii vecinilor elementelor in diferite locuri din triunghi. Un caz
+separat sunt si restul elementele de pe ultima linie a triunghiului.
+Pentru a afla indicii si pozitiile vecinilor restul elementelor am tot micsorat
+triunghiul luandu-l linile cu linie  uitandu-ma mereu la coltul din stanga,
+coltul din dreapta si elementele dintre. Pentru vectorul de solutii am observat
+ca doar pozitiile corespunzatoare elementelor de pe ultima linie a triunghiului
+trebuie populate cu 1. 
+	Pentru functia matrix_to_csr in values am pus toate elementele nenule cu 
+functia nonzero insa trebuiau luate pe linie si nu pe coloana asa ca am 
+transpus matricea. Pentru colind am utilizat functia find pentru a afla 
+indicii coloanelor elementelor adaugate in values din matrice. La rowptr am
+observat ca in colind in afara de primul element toate elementele care se aflau
+intre 2 numere mai mari decat ele reprezentau indicele coloanei primului 
+element nenul de pe fiecare linie. Cum values si colind au acelasi numar de 
+elemente am parcurs colind si in functie de ce pozitie se afla elementul gasit,
+acela era numarul adaugat in rowptr.      
+	La Jacobi factorization si Jacobi sparse am folosit algoritmul predat la
+seminar pentru a afla matricea si vectorul de iteratie ca mai apoi sa gasesc,
+utilizand csr_multiplication si matricea si vectorul aflat anterior, solutia
+sistemului cand eroarea era mai mica decat o toleranta data.
+
+Task 2 K-Means
+
+	In functia clustering_pc am initializat clusterele cu o matrice
+tridimensionala presupunand ca initial clusterele contin un numar egal de 
+puncte. Am pus punctele mod NC = k in clusterul corespunzator si pentru fiecare
+cluster i-am calculat centroidul. Apoi intr-o instructiune repetitiva while am
+calculat distanta euclidiana de la fiecare punct la fiecare centroid si cand o
+gaseam pe cea minima indexul centroidul cu care am gasit-o l-am adaugat intr-un
+vector de indici. Dupa ce ficarui punct ii este atribuit un index de centroid 
+adaug punctul respectiv in clusterul centroidului care il reprezinta. Recalculez
+centroizii avand grija si la cazul in care un cluster contine un singur punct.
+In momentul in care centroizii nu se mai schimba se iese din intructiunea
+repetitiva.  
+	La compute_cost_pc am calculat distanta euclidiana de la fiecare punct la
+fiecare centroid, distanta minima adaugandu-se la cost. 
+
+Task 3 Householder prediction
+
+	Pentru rgbHistogram am citit imaginea cu imread dupa care am construit 
+vectorul range de care am nevoie pentru histc. Am transformat matriciile 
+fiecarei componente in vectori, avand grija sa sterg zeroul care apare in plus
+la sfarsitul fiecarei histograme. Fiecare componenta a imaginii are o 
+histograma separat in final unindu-le pentru a obtine histograma rgb.
+	Pentru a transforma imaginea din rgb in hsv am urmat algoritmul dat pentru
+transformarea unui pixel insa am lucrat cu intregile componente ale imaginii,
+vectorizand. O problema pe care am avut-o a fost la componetnta H la impartilea
+matricilor intre ele in cazul in care numitorul delta are componente egale cu 0.
+Pentru a rezolva problema am creat un auxiliar pentru delta in care am inlocuit
+toate zerourile cu 1 si am impartit cu aceasta matrice. Apoi pe toate pozitiile 
+in care delta era 0 am pus in 0  in H asa cum aparea si in cazul unui pixel 
+cand delta era 0. 
+	HsvHistogram este aproape identic cu rgbhistogram, in primul rand 
+transform imaginea din rgb in hsv apoi gasesc vectorul de rangeurile pentru 
+histc,folosind un pas de 1.01/count_bins. Am grija sa sterg zeroul in plus
+de la sfarsitul fiecarei histograme. Am cate o histograma pentru fiecare
+componenta pe care apoi le unesc pentru a forma hsvHistogram.
+	La functia de preprocess am citit toate imaginile din directoarele cats
+si not_cats si am format o matrice image cu toate. Pentru imaginile cu pisici
+repectiv fara am creat path_to_image corespunzator precum si adaugat labelul 
+corespunzator in vectorul y. Am facut vectorii de features in functie de
+parametrul histogram pentru toate imaginile din folderul dataset. Pentru
+Householder si SST m-am folosit de algoritmii prezentati la pregatire respectiv
+laborator
+	In functia de learn am adaugat biasul si am folosit functiile implementate
+anterior pentru a-l afla pe w. La evaluate am citit toate imaginile din testset
+si le-am aflat feature vectorul adaugand si biasul. Determin clasa in care se 
+afla fiecare imagine facand un produs scalar intre w' si feature vectorul 
+corespunztor imaginii. La final calculez procentrul de acuratete al 
+clasificarii. 
+
+Task 4 Gradient Descent prediction
+	
+	In functia de learn scalez fiecare coloana corespunzator, apoi utilizez 
+algoritmul Mini-batch Gradient Descent Ii dau lui w valori random intre 
+-0,1 si 0,1. Iau linii random din X_tilda si le pun in X_batch retinand 
+indicele liniei luate pentru a putea stii etichetele crespunzatoare liniilor
+din X_batch. La evaluate citesc toate imaginile din testset si le aflu feature
+vectorul. Scalez coloanele din acest feature vector si determin clasa in care 
+se afla fiecare imagine facand un produs scalar intre w' si X_tilda corespunztor
+imaginii. La final calculez procentrul de acuratete al clasificarii.
+	
